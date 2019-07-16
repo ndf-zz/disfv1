@@ -23,7 +23,7 @@ import sys
 import struct
 
 # Constants
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 PROGLEN = 128
 
 # Bit Masks
@@ -96,9 +96,9 @@ class fv1deparse(object):
 		0x3:	'512',
         }
         self.chotype = {
-		0x0:	'RDA',
-		0x2:	'SOF',
-		0x3:	'RDAL',
+		0x0:	'rda',
+		0x2:	'sof',
+		0x3:	'rdal',
         }
         self.chosel = {
 		0x0:	'SIN0',
@@ -175,7 +175,7 @@ class fv1deparse(object):
 
     def __reg__(self, reg):
         """Convert a register argument to text."""
-        ret = '${0:02x}'.format(reg)
+        ret = '0x{0:02x}'.format(reg)
         if reg in self.regs:
             ret = self.regs[reg]
         return ret
@@ -236,7 +236,7 @@ class fv1deparse(object):
             selstr = self.chosel[sel]
         flags = inst['args'][2]
         flagv = []
-        if flags & 0x01 == 0x00:
+        if flags == 0x00:
             flagv.append('SIN')
         for flag in sorted(self.choflags):
             if flags&flag:
@@ -245,17 +245,17 @@ class fv1deparse(object):
         d = inst['args'][3]
         dstr = None
         if typestr == 'RDAL':
-            inst['argstring'] = ','.join(['RDAL',selstr])
+            inst['argstring'] = ','.join(['rdal',selstr,flagstr])
             inst['comment'] = 't:0x{0:01x} n:0x{1:01x} c:0x{2:02x}'.format(
                 typeval, sel, flags)
         elif typestr == 'RDA':
             dstr = str(d)
-            inst['argstring'] = ','.join(['RDA',selstr,flagstr,dstr])
+            inst['argstring'] = ','.join(['rda',selstr,flagstr,dstr])
             inst['comment'] = 't:0x{0:01x} n:0x{1:01x} c:0x{2:02x} addr:0x{3:04x}'.format(
                 typeval, sel, flags, d)
         else:
             dstr = self.__s_15__(d)
-            inst['argstring'] = ','.join(['SOF',selstr,flagstr,dstr])
+            inst['argstring'] = ','.join(['sof',selstr,flagstr,dstr])
             inst['comment'] = 't:0x{0:01x} n:0x{1:01x} c:0x{2:02x} d:0x{3:04x}'.format(
                 typeval, sel, flags, d)
 
@@ -307,7 +307,7 @@ class fv1deparse(object):
             inst['comment'] = 'xor 0xffffff'
         else:
             inst['comment'] = 'val:'.format(mask) + self.__s_23__(mask)
-            inst['argstring'] = '${0:06x}'.format(mask)
+            inst['argstring'] = '0x{0:06x}'.format(mask)
 
     def __wldx__(self, inst, address):
         """Extract wldr and wlds instructions."""
@@ -368,8 +368,8 @@ class fv1deparse(object):
         if self.nopraw:
             inst['mnemonic'] = 'nop'
         else:
-            inst['argstring'] = '${0:08x}'.format(val)
-        inst['comment'] = '0x{0:08x}'.format(val)
+            inst['argstring'] = '0x{0:08x}'.format(val)
+        inst['comment'] = repr(struct.pack('>I',val))
 
     def __fixinst__(self, inst, address):
         """Examine instruction and extract an assembly equivalent."""
