@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     python_requires='>=3',
     name="disfv1",
-    version="1.0.1",
+    version="1.0.2",
     author="Nathan Fraser",
     author_email="ndf@metarace.com.au",
     description="FV-1 Disassembler",
