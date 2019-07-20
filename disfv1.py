@@ -23,7 +23,7 @@ import sys
 import struct
 
 # Constants
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 PROGLEN = 128
 
 # Bit Masks
@@ -227,7 +227,7 @@ class fv1deparse(object):
     def __cho__(self, inst, address):
         """Extract a CHO instruction."""
         typeval = inst['args'][0]
-        typestr = str(type)
+        typestr = str(typeval)
         if typeval in self.chotype:
             typestr = self.chotype[typeval]
         sel = inst['args'][1]
@@ -244,19 +244,24 @@ class fv1deparse(object):
         flagstr = '|'.join(flagv)
         d = inst['args'][3]
         dstr = None
-        if typestr == 'RDAL':
+        if typestr == 'rdal':
             inst['argstring'] = ','.join(['rdal',selstr,flagstr])
             inst['comment'] = 't:0x{0:01x} n:0x{1:01x} c:0x{2:02x}'.format(
                 typeval, sel, flags)
-        elif typestr == 'RDA':
+        elif typestr == 'rda':
             dstr = str(d)
             inst['argstring'] = ','.join(['rda',selstr,flagstr,dstr])
             inst['comment'] = 't:0x{0:01x} n:0x{1:01x} c:0x{2:02x} addr:0x{3:04x}'.format(
                 typeval, sel, flags, d)
-        else:
+        elif typestr == 'sof':
             dstr = self.__s_15__(d)
             inst['argstring'] = ','.join(['sof',selstr,flagstr,dstr])
             inst['comment'] = 't:0x{0:01x} n:0x{1:01x} c:0x{2:02x} d:0x{3:04x}'.format(
+                typeval, sel, flags, d)
+        else:
+            dstr = str(d)
+            inst['argstring'] = ','.join([typestr,selstr,flagstr,dstr])
+            inst['comment'] = 't:0x{0:01x} n:0x{1:01x} c:0x{2:02x} addr:0x{3:04x}'.format(
                 typeval, sel, flags, d)
 
     def __jam__(self, inst, address):
