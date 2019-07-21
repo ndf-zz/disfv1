@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    python_requires='>=3',
+    python_requires='>2.6',
     name="disfv1",
     version="1.0.3",
     author="Nathan Fraser",
@@ -19,10 +19,10 @@ setuptools.setup(
         ],
     },
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 	'Environment :: Console',
         'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
-        'Programming Language :: Python :: 3 :: Only',
+        'Programming Language :: Python',
         'Topic :: Software Development :: Assemblers',
     ],
     py_modules=['disfv1',],
