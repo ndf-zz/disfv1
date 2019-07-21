@@ -23,7 +23,7 @@ import sys
 import struct
 
 # Constants
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 PROGLEN = 128
 
 # Bit Masks
@@ -97,6 +97,7 @@ class fv1deparse(object):
         }
         self.chotype = {
 		0x0:	'rda',
+		0x1:	'rda',	# override invalid chotype
 		0x2:	'sof',
 		0x3:	'rdal',
         }
@@ -266,9 +267,10 @@ class fv1deparse(object):
 
     def __jam__(self, inst, address):
         """Extract a JAM instruction."""
-        lfo = inst['args'][0]
+        lfo = inst['args'][0]|0x2
+        lfostr = self.chosel[lfo]
         inst['comment'] = 'lfo:{0:#01x}'.format(lfo)
-        inst['argstring'] = str(lfo&0x01)
+        inst['argstring'] = lfostr
 
     def __delayop__(self, inst, address):
         """Extract a delay/multiplier instruction: op delay,k"""
