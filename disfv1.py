@@ -18,6 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Python2 > 2.6 support
+from __future__ import print_function
+from __future__ import division
+from __future__ import unicode_literals
+from __future__ import absolute_import
+from builtins import range
+from builtins import open
+from builtins import str
+
+# Imports
 import argparse
 import sys
 import struct
@@ -176,7 +186,7 @@ class fv1deparse(object):
 
     def __reg__(self, reg):
         """Convert a register argument to text."""
-        ret = '{0:#02x}'.format(reg)
+        ret = '{0:#04x}'.format(reg)
         if reg in self.regs:
             ret = self.regs[reg]
         return ret
@@ -216,12 +226,12 @@ class fv1deparse(object):
         if inst['mnemonic'] == 'rdfx' and mult == 0:
             inst['mnemonic'] = 'ldax'
             inst['argstring'] = self.__reg__(reg)
-            inst['comment'] = 'reg:{0:#02x}'.format(reg)
+            inst['comment'] = 'reg:{0:#04x}'.format(reg)
         elif inst['mnemonic'] == 'maxx' and mult == 0 and reg == 0:
             inst['mnemonic'] = 'absa'
             inst['comment'] = 'maxx 0,0'
         else:
-            inst['comment'] = 'reg:{0:#02x} k:{1:#04x}'.format(reg, mult)
+            inst['comment'] = 'reg:{0:#04x} k:{1:#06x}'.format(reg, mult)
             inst['argstring'] = ','.join([ self.__reg__(reg),
                                        self.__s1_14__(mult) ])
 
@@ -247,56 +257,56 @@ class fv1deparse(object):
         dstr = None
         if typestr == 'rdal':
             inst['argstring'] = ','.join(['rdal',selstr,flagstr])
-            inst['comment'] = 't:{0:#01x} n:{1:#01x} c:{2:#02x}'.format(
+            inst['comment'] = 't:{0:#03x} n:{1:#03x} c:{2:#04x}'.format(
                 typeval, sel, flags)
         elif typestr == 'rda':
             dstr = str(d)
             inst['argstring'] = ','.join(['rda',selstr,flagstr,dstr])
-            inst['comment'] = 't:{0:#01x} n:{1:#01x} c:{2:#02x} addr:{3:#04x}'.format(
+            inst['comment'] = 't:{0:#03x} n:{1:#03x} c:{2:#04x} addr:{3:#06x}'.format(
                 typeval, sel, flags, d)
         elif typestr == 'sof':
             dstr = self.__s_15__(d)
             inst['argstring'] = ','.join(['sof',selstr,flagstr,dstr])
-            inst['comment'] = 't:{0:#01x} n:{1:#01x} c:{2:#02x} d:{3:#04x}'.format(
+            inst['comment'] = 't:{0:#03x} n:{1:#03x} c:{2:#04x} d:{3:#06x}'.format(
                 typeval, sel, flags, d)
         else:
             dstr = str(d)
             inst['argstring'] = ','.join([typestr,selstr,flagstr,dstr])
-            inst['comment'] = 't:{0:#01x} n:{1:#01x} c:{2:#02x} addr:{3:#04x}'.format(
+            inst['comment'] = 't:{0:#03x} n:{1:#03x} c:{2:#04x} addr:{3:#06x}'.format(
                 typeval, sel, flags, d)
 
     def __jam__(self, inst, address):
         """Extract a JAM instruction."""
         lfo = inst['args'][0]|0x2
         lfostr = self.chosel[lfo]
-        inst['comment'] = 'lfo:{0:#01x}'.format(lfo)
+        inst['comment'] = 'lfo:{0:#03x}'.format(lfo)
         inst['argstring'] = lfostr
 
     def __delayop__(self, inst, address):
         """Extract a delay/multiplier instruction: op delay,k"""
         offset = inst['args'][0]
         mult = inst['args'][1]
-        inst['comment'] = 'del:{0:#04x} k:{1:#03x}'.format(offset, mult)
+        inst['comment'] = 'del:{0:#06x} k:{1:#05x}'.format(offset, mult)
         inst['argstring'] = ','.join([ str(offset), 
                                        self.__s1_9__(mult) ])
 
     def __mulx__(self, inst, address):
         """Extract a mulx instruction."""
         reg = inst['args'][0]
-        inst['comment'] = 'reg:{0:#02x}'.format(reg)
+        inst['comment'] = 'reg:{0:#04x}'.format(reg)
         inst['argstring'] = self.__reg__(reg)
 
     def __rmpa__(self, inst, address):
         """Extract a rmpa instruction."""
         mult = inst['args'][0]
-        inst['comment'] = 'k:{0:#03x}'.format(mult)
+        inst['comment'] = 'k:{0:#05x}'.format(mult)
         inst['argstring'] = self.__s1_9__(mult)
 
     def __scaleoft__(self, inst, address):
         """Extract a scale/offset instruction: op k,const"""
         mult = inst['args'][0]
         offset = inst['args'][1]
-        inst['comment'] = 'k:{0:#04x} const:{1:#03x}'.format(mult,offset)
+        inst['comment'] = 'k:{0:#06x} const:{1:#05x}'.format(mult,offset)
         ostr = self.__s_10__(offset)
         if inst['mnemonic'] == 'log':
             # SpinASM takes the scaled value, and converts it
@@ -314,7 +324,7 @@ class fv1deparse(object):
             inst['comment'] = 'xor 0xffffff'
         else:
             inst['comment'] = 'val:'.format(mask) + self.__s_23__(mask)
-            inst['argstring'] = '{0:#06x}'.format(mask)
+            inst['argstring'] = '{0:#08x}'.format(mask)
 
     def __wldx__(self, inst, address):
         """Extract wldr and wlds instructions."""
@@ -331,7 +341,7 @@ class fv1deparse(object):
                 ampstr = self.rampamp[amp]
             inst['argstring'] = ','.join(['RMP'+str(lfo),
                   self.__i_15__(freq), ampstr ])
-            inst['comment'] = 'lfo:{0:#01x} f:{1:#04x} a:{2:#01x}'.format(
+            inst['comment'] = 'lfo:{0:#03x} f:{1:#06x} a:{2:#03x}'.format(
                  lfo, freq, amp)
         else:
             # WLDS
@@ -343,7 +353,7 @@ class fv1deparse(object):
             amp = inst['args'][2]
             inst['argstring'] = ','.join(['SIN'+str(lfo),
                   str(freq), str(amp) ])
-            inst['comment'] = 'lfo:{0:#01x} f:{1:#03x} a:{2:#04x}'.format(
+            inst['comment'] = 'lfo:{0:#03x} f:{1:#05x} a:{2:#06x}'.format(
                  lfo, freq, amp)
 
     def __skp__(self, inst, address):
@@ -356,7 +366,7 @@ class fv1deparse(object):
             targetstr = 'addr{0:02x}'.format(taddr)
             self.jmptbl[taddr] = targetstr
             inst['target'] = targetstr
-        inst['comment'] = 'flags:{0:#02x} offset:{1:#02x}'.format(
+        inst['comment'] = 'flags:{0:#04x} offset:{1:#04x}'.format(
                                 flags, offset)
         flagv = []
         if flags == 0:
@@ -375,7 +385,7 @@ class fv1deparse(object):
         if self.nopraw:
             inst['mnemonic'] = 'nop'
         else:
-            inst['argstring'] = '{0:#08x}'.format(val)
+            inst['argstring'] = '{0:#010x}'.format(val)
         inst['comment'] = repr(struct.pack('>I',val))
 
     def __fixinst__(self, inst, address):
@@ -410,7 +420,7 @@ class fv1deparse(object):
         else:
             self.dowarn('info: Unknown mnemonic: '
                          + repr(inst['mnemonic'])
-                         + ' raw:{0:#08x} at address:{1:#02x}'.format(
+                         + ' raw:{0:#010x} at address:{1:#04x}'.format(
                               inst['command'], address))
         if address in self.jmptbl:
             inst['label'] = self.jmptbl[address]
@@ -514,7 +524,7 @@ def main():
     oft = 0
     if args.p is not None:
         oft = args.p * (PROGLEN*4)
-        dowarn('info: Reading from program {0} at offset {1:#04X}'.format(
+        dowarn('info: Reading from program {0} at offset {1:#06x}'.format(
                args.p, oft))
     fp = fv1deparse(inbuf[oft:oft+(PROGLEN*4)],
                     relative=args.relative, nopraw=args.suppressraw,
