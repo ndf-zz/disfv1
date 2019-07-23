@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 #
 # disfv1: FV-1 Disassembler
 # Copyright (C) 2019 Nathan Fraser
@@ -33,7 +32,7 @@ import sys
 import struct
 
 # Constants
-VERSION = '1.0.3'
+VERSION = '1.0.4'
 PROGLEN = 128
 
 # Bit Masks
