@@ -17,7 +17,22 @@ Spin IDE.
 
 ## Installation
 
+Make sure your system has a python interpreter
+(preferably python3), then install from the
+[Python Package Index](https://pypi.org/)
+using the
+[pip](https://pip.pypa.io/en/stable/)
+command:
+
+	$ pip3 install disfv1
+
+or
+
 	$ pip install disfv1
+
+For system-specific installation instructions see
+[System Specific Installation](#system-specific-installation)
+below.
 
 ## Usage
 
@@ -74,6 +89,72 @@ assembler compatible with asfv1.
 		rda	9830,0.5               	; del:0x2666 k:0x100
 		rda	19660,0.5              	; del:0x4ccc k:0x100
 		wrax	DACL,0.0               	; reg:0x16 k:0x0000
+
+## System Specific Installation
+
+The preferred method for installation is to use your system's
+packaged pip3 command to fetch and install disfv1 from
+[PyPi](https://pypi.org/) and set it up to work with a python3
+interpreter.
+
+### Linux with apt (Debian, Ubuntu)
+
+	$ sudo apt install python3-venv python3-pip
+	$ pip3 install disfv1
+
+### Linux with yum (Fedora 21)
+
+	$ sudo yum install python3 python3-wheel
+	$ pip3 install disfv1
+
+### Linux with dnf (Fedora 22)
+
+	$ sudo dnf install python3 python3-wheel
+	$ pip3 install disfv1
+
+rch Linux
+
+	$ sudo pacman -S python-pip
+	$ pip install disfv1
+
+### MacOS
+
+Download a copy of the &quot;Latest Python 3 Release&quot;
+for Mac OS from
+[python.org](https://www.python.org/downloads/mac-osx/).
+Install the package, then open a terminal and run:
+
+	$ pip3 install disfv1
+
+### Windows
+
+Download a copy of the &quot;Latest Python 3 Release&quot;
+for Windows from
+[python.org](https://www.python.org/downloads/windows/).
+Install the package, then open a command prompt and run:
+
+	C:\> pip3 install disfv1
+
+For more detailed information, please refer to the
+[Python package installation documentation](https://packaging.python.org/tutorials/installing-packages/)
+and
+[installing pip with packaging managers](https://packaging.python.org/guides/installing-using-linux-tools/#installing-pip-setuptools-wheel-with-linux-package-managers)
+at
+[packaging.python.org](https://packaging.python.org/).
+
+### Install from Source
+
+If you would prefer to not use pip, or if your system is provided with
+and older version of Python (eg MacOS), disfv1 can be installed using
+the included setup.py script. Fetch a copy of the latest source package,
+unpack it and then run the installer as root:
+
+	$ sudo python ./setup.py install
+
+Alternatively, the main source file can be run directly with a python
+interpreter without the need to install any files:
+
+	$ python ./disfv1.py infile.asm outfile.bin
 
 ## Links
 
