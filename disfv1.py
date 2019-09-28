@@ -32,7 +32,7 @@ import sys
 import struct
 
 # Constants
-VERSION = '1.0.4'
+VERSION = '1.0.5'
 PROGLEN = 128
 
 # Bit Masks
@@ -307,9 +307,6 @@ class fv1deparse(object):
         offset = inst['args'][1]
         inst['comment'] = 'k:{0:#06x} const:{1:#05x}'.format(mult,offset)
         ostr = self.__s_10__(offset)
-        if inst['mnemonic'] == 'log':
-            # SpinASM takes the scaled value, and converts it
-            ostr = self.__s4_6__(offset)
         inst['argstring'] = ','.join([ self.__s1_14__(mult), ostr ])
 
     def __bitop__(self, inst, address):
