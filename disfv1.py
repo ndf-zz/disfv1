@@ -1,38 +1,23 @@
 #
 # disfv1: FV-1 Disassembler
-# Copyright (C) 2019 Nathan Fraser
+# Copyright (C) 2019-2021 Nathan Fraser
 #
 # A disassembler for the Spin Semiconductor FV-1 DSP.
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Python2 > 2.6 support
-from __future__ import print_function
 from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import absolute_import
-from builtins import range
-from builtins import open
-from builtins import str
 
 # Imports
 import argparse
 import sys
 import struct
+from decimal import Decimal
 
 # Constants
-VERSION = '1.0.5'
+VERSION = '1.0.6'
 PROGLEN = 128
 
 # Bit Masks
@@ -192,27 +177,27 @@ class fv1deparse(object):
 
     def __s1_14__(self, val):
         """Convert and return a S1.14 real as text."""
-        return str(((val&((1<<15)-1))-(val&(1<<15)))/(1<<14))
+        return str(Decimal(((val&((1<<15)-1))-(val&(1<<15)))/(1<<14)))
 
     def __s1_9__(self, val):
         """Convert and return a S1.9 real as text."""
-        return str(((val&((1<<10)-1))-(val&(1<<10)))/(1<<9))
+        return str(Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<9)))
 
     def __s4_6__(self, val):
         """Convert and return a S4.6 real as text."""
-        return str(((val&((1<<10)-1))-(val&(1<<10)))/(1<<6))
+        return str(Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<6)))
 
     def __s_10__(self, val):
         """Convert and return a S.10 real as text."""
-        return str(((val&((1<<10)-1))-(val&(1<<10)))/(1<<10))
+        return str(Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<10)))
 
     def __i_15__(self, val):
         """Convert and return a signed integer as text."""
-        return str((val&((1<<15)-1))-(val&(1<<15)))
+        return str(Decimal((val&((1<<15)-1))-(val&(1<<15))))
 
     def __s_15__(self, val):
         """Convert and return a S.15 real as text."""
-        return str(((val&((1<<15)-1))-(val&(1<<15)))/(1<<15))
+        return str(Decimal(((val&((1<<15)-1))-(val&(1<<15)))/(1<<15)))
 
     def __s_23__(self, val):
         """Convert and return a S.23 real as text."""
@@ -509,7 +494,7 @@ def main():
                         help="convert invalid/raw statements into nop")
     parser.add_argument('-p',
                         help='program number',
-                        type=int, choices=range(0,8))
+                        type=int, choices=list(range(0,8)))
     args = parser.parse_args()
     dowarn = warning
     if args.quiet:

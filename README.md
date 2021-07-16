@@ -2,7 +2,7 @@
 
 Disassembler for Spin Semi FV-1
 
-Copyright (C) 2019 Nathan Fraser
+Copyright (C) 2019-2021 Nathan Fraser
 
 A simple disassembler for the Spin Semiconductor FV-1 DSP. This
 disassembler will convert a FV-1 binary program file into strict
