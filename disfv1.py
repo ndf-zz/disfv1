@@ -19,6 +19,7 @@ from decimal import Decimal
 # Constants
 VERSION = '1.0.6'
 PROGLEN = 128
+MINPREC = Decimal('0.0')
 
 # Bit Masks
 M1 = 0x01
@@ -177,31 +178,31 @@ class fv1deparse(object):
 
     def __s1_14__(self, val):
         """Convert and return a S1.14 real as text."""
-        return str(Decimal(((val&((1<<15)-1))-(val&(1<<15)))/(1<<14)))
+        return str(MINPREC + Decimal(((val&((1<<15)-1))-(val&(1<<15)))/(1<<14)))
 
     def __s1_9__(self, val):
         """Convert and return a S1.9 real as text."""
-        return str(Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<9)))
+        return str(MINPREC + Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<9)))
 
     def __s4_6__(self, val):
         """Convert and return a S4.6 real as text."""
-        return str(Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<6)))
+        return str(MINPREC + Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<6)))
 
     def __s_10__(self, val):
         """Convert and return a S.10 real as text."""
-        return str(Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<10)))
+        return str(MINPREC + Decimal(((val&((1<<10)-1))-(val&(1<<10)))/(1<<10)))
 
     def __i_15__(self, val):
         """Convert and return a signed integer as text."""
-        return str(Decimal((val&((1<<15)-1))-(val&(1<<15))))
+        return str(MINPREC + Decimal((val&((1<<15)-1))-(val&(1<<15))))
 
     def __s_15__(self, val):
         """Convert and return a S.15 real as text."""
-        return str(Decimal(((val&((1<<15)-1))-(val&(1<<15)))/(1<<15)))
+        return str(MINPREC + Decimal(((val&((1<<15)-1))-(val&(1<<15)))/(1<<15)))
 
     def __s_23__(self, val):
         """Convert and return a S.23 real as text."""
-        return str(((val&((1<<23)-1))-(val&(1<<23)))/(1<<23))
+        return str(MINPREC + Decimal(((val&((1<<23)-1))-(val&(1<<23)))/(1<<23)))
 
     def __regmult__(self, inst, address):
         """Extract a register/multiplier instruction: op REG,k"""
