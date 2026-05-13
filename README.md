@@ -2,6 +2,9 @@
 
 Disassembler for Spin Semi FV-1
 
+Archived: 2026-05-13
+Moved to: https://codeberg.org/ndf-zz/disfv1
+
 Copyright (C) 2019-2021 Nathan Fraser
 
 A simple disassembler for the Spin Semiconductor FV-1 DSP. This
